@@ -23,4 +23,4 @@ Por supuesto, la herramienta esta abierta a ampliaciones en su funcionalidad.
 
 # Dependencias
 La herramienta necesita los siguientes módulos para funcionar:
-* Scapy <https://github.com/secdev/scapy>
+* Scapy: <https://github.com/secdev/scapy>
