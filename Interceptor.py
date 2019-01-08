@@ -14,7 +14,11 @@ import logo
 
 global mitm
 global ipforwenable
+global victimIP
+global gatewayIP
 
+victimIP = []
+gatewayIP = ""
 mitm = False
 ipforwenable = False
 
@@ -51,7 +55,7 @@ def netmaskConverter(cidr):
     return network, netmask
 
 def hostDetectorARP():
-    ans, unans = srp(Ether(dst="ff:ff:ff:ff:ff:ff")/ARP(pdst=gatewayIP),timeout=2)
+    ans, unans = srp(Ether(dst="ff:ff:ff:ff:ff:ff")/ARP(pdst=gatewayIP), retry=2, timeout=2)
     for i in range (0, len(ans)):
         victimIP.append(ans[i][1].psrc)
 
@@ -220,7 +224,6 @@ def ARPSpoofingAll():
     enable_ip_forwarding()
     mitmMul()
 
-
 if not os.getuid()==0:
     sys.exit("\nEs necesario ejecutar el script como root\n")
 
@@ -235,7 +238,11 @@ menu["5"]="Salir"
 menuOtros = {}
 menuOtros["1"]="Habilitar IP Forwarding"
 menuOtros["2"]="Deshabilitar IP Forwarding"
-menuOtros["3"]="Atras"
+menuOtros["3"]="Escaneo de red ARP (Recomendado)"
+menuOtros["4"]="Escaneo de red ICMP"
+menuOtros["5"]="Escaneo de red TCP"
+menuOtros["6"]="Escaneo de red UDP"
+menuOtros["7"]="Atras"
 
 while True:
     print "\n"
@@ -266,6 +273,34 @@ while True:
                 disable_ip_forwarding()
                 print "\n"
             elif selectionO == "3":
+                victimIP = []
+                gatewayIP = raw_input("Introduzca la IP de la puerta de enlace con la máscara[192.168.1.1/24]: ") or "192.168.1.1/24"
+                hostDetectorARP()
+                for i in range (0, len(victimIP)):
+                    print victimIP[i]
+                print "\n"
+            elif selectionO == "4":
+                victimIP = []
+                gatewayIP = raw_input("Introduzca la IP de la puerta de enlace con la máscara[192.168.1.1/24]: ") or "192.168.1.1/24"
+                hostDetectorICMP()
+                for i in range (0, len(victimIP)):
+                    print victimIP[i]
+                print "\n"
+            elif selectionO == "5":
+                victimIP = []
+                gatewayIP = raw_input("Introduzca la IP de la puerta de enlace con la máscara[192.168.1.1/24]: ") or "192.168.1.1/24"
+                hostDetectorTCP()
+                for i in range (0, len(victimIP)):
+                    print victimIP[i]
+                print "\n"
+            elif selectionO == "6":
+                victimIP = []
+                gatewayIP = raw_input("Introduzca la IP de la puerta de enlace con la máscara[192.168.1.1/24]: ") or "192.168.1.1/24"
+                hostDetectorUDP()
+                for i in range (0, len(victimIP)):
+                    print victimIP[i] 
+                print "\n"                                                   
+            elif selectionO == "7":
                 break
             else:
                 print "Seleccione una opción valida\n"
